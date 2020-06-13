@@ -1,0 +1,13 @@
+water{
+unlocalized_name: "bottle_water"; //Вода
+name: "Пластиковая бутылка";
+file_name: "bottle_water";
+description: "Обычная пластиковая бутылка, в ней можно хранить жидкости.";
+}
+water{
+unlocalized_name: "soda_pipsi";
+name: "NotaCola";
+file_name: "soda_pipsi";
+description: "Rocket's Pipsi cola.";
+one_use: true;
+}
