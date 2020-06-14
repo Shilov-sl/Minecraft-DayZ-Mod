@@ -27,6 +27,8 @@ import ru.shilov.dayz.common.events.DayZEventHandler;
 import ru.shilov.dayz.common.events.EventPlayerHandler;
 import ru.shilov.dayz.common.events.EventTickHandler;
 import ru.shilov.dayz.common.items.ItemClip;
+import ru.shilov.dayz.common.items.ItemFoodWater;
+import ru.shilov.dayz.common.items.ItemMedicine;
 import ru.shilov.dayz.common.items.ItemUsable;
 import ru.shilov.dayz.common.potion.DayZPotion;
 import ru.shilov.dayz.network.PacketHandler;
@@ -49,24 +51,36 @@ public class DayZMain {
 	public static Item freshApple;
 	public static Item cannedBakedBeans;
 	
+	public static Item bandage;
+	
 	public static Item nato30Mag;
 	
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+    	PROXY.preInit(event);
+    	DayZPotion.loadLDPotions();
+    	DayZPotion.registerLDPotions();
+		DayZConfig.loadDayZConfig(event);
+		EntityRegistry.registerModEntity(EntityDeadBody.class, "DeadBody", 90, DayZMain.INSTANCE, 80, 1, true);
+        FMLCommonHandler.instance().bus().register(new EventPlayerHandler());
+        FMLCommonHandler.instance().bus().register(new EventTickHandler());
+        MinecraftForge.EVENT_BUS.register(new DayZEventHandler());
+        
     	customTab = new CustomCreativeTab();
     	
     	ArrayList list = new ArrayList();
     	list.add("Многоразовая бутылка.");
     	// 					ItemUsable(unlocalizedName, name, stackSize, description, weight, typeAction, useDuration, maxAmountUse, food, water, oneOff) 
-    	plasticBottle = new ItemUsable("plastic_bottle", "Пластиковая бутылка", 1, list, 1.0F, EnumAction.drink, 30, 10, 25, 250, false);
-    	sodaNolaCola = new ItemUsable("soda_nolacola", "Nola Cola", 1, list, 0.5F, EnumAction.drink, 10000, 10, 15, 25, true);
-    	freshApple = new ItemUsable("fresh_apple", "Яблоко", 1, list, 1.0F, EnumAction.eat, 1, 1, 1, 16, true);
-    	cannedBakedBeans = new ItemUsable("canned_bakedbeans", "Банка бобов", 1, list, 0.5F, EnumAction.eat, 1, 1, 1, 25, true);
+    	plasticBottle = new ItemFoodWater("plastic_bottle", "Пластиковая бутылка", 1, list, 1.0F, EnumAction.drink, 30, 10, false, 10, 25);
+    	sodaNolaCola = new ItemFoodWater("soda_nolacola", "Nola Cola", 1, list, 0.5F, EnumAction.drink, 30, 10, true, 10, 25);
+    	freshApple = new ItemFoodWater("fresh_apple", "Яблоко", 1, list, 1.0F, EnumAction.eat, 30, 5, true, 10, 25);
+    	cannedBakedBeans = new ItemFoodWater("canned_bakedbeans", "Банка бобов", 1, list, 0.5F, EnumAction.eat, 30, 3, true, 10, 25);
+    	
+    	bandage = new ItemMedicine("bandage", "Бинт", 1, list, 0.5F, EnumAction.bow, 30, 4, true, true);
     	
     	//				ItemClip(unlocalizedName, name, stackSize, description, weight, maxBullet)
     	nato30Mag = new ItemClip("nato_30mag", "Обойма NATO 30 патронов", 1, list, 0.5F, 30, 30);
     	
-    	PROXY.preInit(event);
         LOGGER.info("Pre initialization event is done.");
     }
     
@@ -74,12 +88,6 @@ public class DayZMain {
     public void init(FMLInitializationEvent event) {
     	PROXY.init(event);
     	PACKETS.initialise();
-    	DayZPotion.loadLDPotions();
-    	DayZPotion.registerLDPotions();
-		EntityRegistry.registerModEntity(EntityDeadBody.class, "DeadBody", 90, DayZMain.INSTANCE, 80, 1, true);
-        FMLCommonHandler.instance().bus().register(new EventPlayerHandler());
-        FMLCommonHandler.instance().bus().register(new EventTickHandler());
-        MinecraftForge.EVENT_BUS.register(new DayZEventHandler());
         LOGGER.info("Initialization event is done.");
     }
     

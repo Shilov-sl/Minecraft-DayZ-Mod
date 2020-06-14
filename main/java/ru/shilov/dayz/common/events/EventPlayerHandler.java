@@ -35,7 +35,7 @@ public class EventPlayerHandler {
 		if(event.player instanceof EntityPlayer  && !event.player.worldObj.isRemote) {
 			EntityPlayer player = (EntityPlayer) event.player;
             DayZExtendedPlayer exp = DayZExtendedPlayer.get(player);
-            exp.resetBlood(0);
+            exp.resetBlood(exp.MAX_BLOOD);
             exp.resetFood(0);
             exp.resetThirst(0);
 		}

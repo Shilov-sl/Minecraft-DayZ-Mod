@@ -9,7 +9,7 @@ import net.minecraftforge.common.IExtendedEntityProperties;
 public class DayZExtendedPlayer implements IExtendedEntityProperties {
 	public final static String EXT_PROP_NAME = "DayZExtendedPlayer";
 	private final EntityPlayer player;
-	public final int MAX_BLOOD = 50000, MAX_FOOD = 50000, MAX_THIRST = 50000, MAX_ENERGY = 50000;
+	public final int MAX_BLOOD = 5000, MAX_FOOD = 50000, MAX_THIRST = 50000, MAX_ENERGY = 50000;
 	public static final int blood = 25, food = 26, thirst = 27, temperature = 28;
 	
 	public DayZExtendedPlayer(EntityPlayer player) {

@@ -24,7 +24,7 @@ public class AnnotationHooks {
 			GL11.glDisable(GL11.GL_BLEND);
 			Tessellator tessellator = Tessellator.instance;
 			renderQuad(tessellator, p_94148_4_ + 2, p_94148_5_ + 14, 13, 1, 1);
-			renderQuad(tessellator, p_94148_4_ + 2, p_94148_5_ + 14, (int)Math.round((p_94148_3_.getTagCompound().getInteger("currentAmountUse") / p_94148_3_.getTagCompound().getInteger("maxAmountUse")) * 13.0D), 1, -1);  
+			renderQuad(tessellator, p_94148_4_ + 2, p_94148_5_ + 14, healthLine, 1, -1);  
 			//GL11.glEnable(GL11.GL_BLEND); // Forge: Disable Bled because it screws with a lot of things down the line.
 			GL11.glEnable(GL11.GL_ALPHA_TEST);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);

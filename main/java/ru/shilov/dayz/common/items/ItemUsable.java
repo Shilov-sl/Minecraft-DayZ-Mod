@@ -10,22 +10,18 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import ru.shilov.dayz.common.player.DayZExtendedPlayer;
 
 public class ItemUsable extends CustomItem{
 	private int currentAmountUse, maxAmountUse;
-	private int food, water;
 	private int useDuration;
 	private EnumAction typeAction;
-	private boolean oneOff;
+	protected boolean oneOff;
 	
-	public ItemUsable(String unlocalizedName, String name, int stackSize, List description, float weight, EnumAction typeAction, int useDuration, int maxAmountUse, int food, int water, boolean oneOff) {
+	public ItemUsable(String unlocalizedName, String name, int stackSize, List description, float weight, EnumAction typeAction, int useDuration, int maxAmountUse, boolean oneOff) {
 		super(unlocalizedName, name, stackSize, description, weight);
 		this.typeAction = typeAction;
 		this.useDuration = useDuration;
 		this.maxAmountUse = maxAmountUse;
-		this.food = food;
-		this.water = water;
 		this.oneOff = oneOff;
 	}
 	
@@ -46,20 +42,6 @@ public class ItemUsable extends CustomItem{
     
     @Override
     public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
-        DayZExtendedPlayer exp = DayZExtendedPlayer.get(player);
-        int amount = stack.getTagCompound().getInteger("currentAmountUse");
-        if(amount > 0) {
-        	if(this.food != 0) {
-        		exp.subtractFood(this.food);       
-        	}
-            if(this.water != 0) {
-        		exp.subtractThirst(this.water);
-        	}
-    		stack.getTagCompound().setInteger("currentAmountUse", amount - 1);
-        	if(this.oneOff && stack.getTagCompound().getInteger("currentAmountUse") == 0) {
-        		--stack.stackSize;
-        	}
-        }
         return stack;
     }
     
@@ -92,8 +74,6 @@ public class ItemUsable extends CustomItem{
 			list.add("Max Amount Use: " + stack.getTagCompound().getInteger("maxAmountUse"));
 			list.add("Current Amount Use: " + stack.getTagCompound().getInteger("currentAmountUse"));
 		}
-    	list.add("Food: " + this.food);
-    	list.add("Water: " + this.water);
     	list.add("One Off: " + this.oneOff);
     }
 	

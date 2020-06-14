@@ -4,11 +4,11 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import ru.shilov.dayz.DayZChatMessage;
 import ru.shilov.dayz.DayZMain;
 import ru.shilov.dayz.common.player.DayZExtendedPlayer;
+import ru.shilov.dayz.common.potion.DayZPotion;
 
 public class EventTickHandler {
 	
@@ -39,11 +39,15 @@ public class EventTickHandler {
 	
 	private void tickEnd(EntityPlayer player) {
         DayZExtendedPlayer exp = DayZExtendedPlayer.get(player);
-		if (!player.capabilities.isCreativeMode && !player.isDead && player.ticksExisted % 20 == 0) {
-			hunger(player);
-			thrist(player);
-			DayZMain.LOGGER.info(player.getCommandSenderName() + " hunger: " + exp.getFood());
-			DayZMain.LOGGER.info(player.getCommandSenderName() + " thirst: " + exp.getThirst());
+		if (!player.capabilities.isCreativeMode && !player.isDead) {
+			if(player.ticksExisted % 20 == 0) {
+				blood(player);
+				hunger(player);
+				thrist(player);
+				DayZMain.LOGGER.info(player.getCommandSenderName() + " blood: " + exp.getBlood());
+				DayZMain.LOGGER.info(player.getCommandSenderName() + " hunger: " + exp.getFood());
+				DayZMain.LOGGER.info(player.getCommandSenderName() + " thirst: " + exp.getThirst());
+			}
 		}
 	}
 	
@@ -54,6 +58,21 @@ public class EventTickHandler {
             DayZExtendedPlayer exp = DayZExtendedPlayer.get(player);
             exp.resetThirst(0);
 		}
+	}
+	
+	private void blood(EntityPlayer player) {
+		DayZExtendedPlayer exp = DayZExtendedPlayer.get(player);
+      	if(player.isPotionActive(DayZPotion.bleeding.id)) {
+      		if(exp.getBlood() > 0 && exp.getBlood() <= exp.MAX_BLOOD) {
+      			exp.subtractBlood(5);
+      		} else if(exp.getBlood() == 0) {
+      			player.attackEntityFrom(DamageSource.cactus, 5);
+      		} else if(exp.getBlood() < 0) {
+      			exp.resetBlood(0);
+      		}
+      	} else {
+      		exp.addBlood(5);
+      	}
 	}
 	
 	private void hunger(EntityPlayer player) {

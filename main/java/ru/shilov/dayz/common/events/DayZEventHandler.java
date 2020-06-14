@@ -6,8 +6,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -19,6 +17,7 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import ru.shilov.dayz.DayZChatMessage;
+import ru.shilov.dayz.DayZConfig;
 import ru.shilov.dayz.common.entity.EntityDeadBody;
 import ru.shilov.dayz.common.player.DayZExtendedPlayer;
 import ru.shilov.dayz.common.potion.DayZPotion;
@@ -49,20 +48,7 @@ public class DayZEventHandler {
 		if (event.entityLiving instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) event.entityLiving;
 			if (player != null && !player.isDead) {
-				if (event.ammount > rand.nextInt(6)) {
-					if (event.source == event.source.fall) {
-						DayZChatMessage.sendMsgChatToPlayer(player, EnumChatFormatting.DARK_RED + "You have a broken leg!");
-						player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 300, 1));
-					} else {
-						if (rand.nextInt(25) == 0) { 
-							DayZChatMessage.sendMsgChatToPlayer(player, EnumChatFormatting.DARK_RED + "You started bleeding!");
-							DayZChatMessage.sendMsgChatToPlayer(player, EnumChatFormatting.DARK_RED + "You have a broken leg!");
-							player.addPotionEffect(new PotionEffect(Potion.poison.id, 1500, 5));
-							player.addPotionEffect(new DayZPotionEffect(DayZPotion.bleeding.id, 600, 5));
-						}
-					}
-				}
-				if (event.ammount > rand.nextInt(15)) {
+				if (event.ammount > rand.nextInt(DayZConfig.bleedingStartChance + 10)) {
 					DayZChatMessage.sendMsgChatToPlayer(player, EnumChatFormatting.DARK_RED + "You started bleeding!");
 					player.addPotionEffect(new DayZPotionEffect(DayZPotion.bleeding.id, 600 + rand.nextInt(600), 5));
 				}
