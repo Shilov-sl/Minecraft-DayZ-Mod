@@ -13,32 +13,25 @@ import net.minecraft.item.ItemStack;
 import ru.shilov.dayz.common.items.ItemUsable;
 
 public class AnnotationHooks {
-	private static FontRenderer fontRendererObj;
-    private static Minecraft mc;
-    private static GuiScreen screen;
-    
 	@Hook(injectOnExit = true)
     public static void renderItemOverlayIntoGUI(RenderItem clazz, FontRenderer p_94148_1_, TextureManager p_94148_2_, ItemStack p_94148_3_, int p_94148_4_, int p_94148_5_, String p_94148_6_) {        
-            if(p_94148_3_ != null && p_94148_3_.getItem() instanceof ItemUsable && p_94148_3_.stackTagCompound != null) {
-            	//ItemWater item = (ItemWater) p_94148_3_.getItem();
-                 //double health = p_94148_3_.getItem().getDurabilityForDisplay(p_94148_3_);
-                 //int k = (int)Math.round(255.0D - health * 255.0D);
-                 int k = (int)Math.round((double)p_94148_3_.getTagCompound().getFloat("currentAmountUse") * 0.14);
-                 GL11.glDisable(GL11.GL_LIGHTING);
-                 GL11.glDisable(GL11.GL_DEPTH_TEST);
-                 GL11.glDisable(GL11.GL_TEXTURE_2D);
-                 GL11.glDisable(GL11.GL_ALPHA_TEST);
-                 GL11.glDisable(GL11.GL_BLEND);
-                 Tessellator tessellator = Tessellator.instance;
-                 renderQuad(tessellator, p_94148_4_ + 2, p_94148_5_ + 14, 13, 1, 1);
-                 renderQuad(tessellator, p_94148_4_ + 2, p_94148_5_ + 14, k - 1, 1, -1);  
-                 //GL11.glEnable(GL11.GL_BLEND); // Forge: Disable Bled because it screws with a lot of things down the line.
-                 GL11.glEnable(GL11.GL_ALPHA_TEST);
-                 GL11.glEnable(GL11.GL_TEXTURE_2D);
-                 GL11.glEnable(GL11.GL_LIGHTING);
-                 GL11.glEnable(GL11.GL_DEPTH_TEST);
-                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            }
+		if(p_94148_3_ != null && p_94148_3_.getItem() instanceof ItemUsable && p_94148_3_.stackTagCompound != null) {
+            int healthLine = (int)Math.round((p_94148_3_.getTagCompound().getInteger("currentAmountUse") / p_94148_3_.getTagCompound().getInteger("maxAmountUse")) * 13.0D);
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glDisable(GL11.GL_DEPTH_TEST);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glDisable(GL11.GL_ALPHA_TEST);
+			GL11.glDisable(GL11.GL_BLEND);
+			Tessellator tessellator = Tessellator.instance;
+			renderQuad(tessellator, p_94148_4_ + 2, p_94148_5_ + 14, 13, 1, 1);
+			renderQuad(tessellator, p_94148_4_ + 2, p_94148_5_ + 14, (int)Math.round((p_94148_3_.getTagCompound().getInteger("currentAmountUse") / p_94148_3_.getTagCompound().getInteger("maxAmountUse")) * 13.0D), 1, -1);  
+			//GL11.glEnable(GL11.GL_BLEND); // Forge: Disable Bled because it screws with a lot of things down the line.
+			GL11.glEnable(GL11.GL_ALPHA_TEST);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		}
         
     }
 

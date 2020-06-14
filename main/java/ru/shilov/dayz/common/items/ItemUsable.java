@@ -10,22 +10,29 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import ru.shilov.dayz.common.player.DayZExtendedPlayer;
 
 public class ItemUsable extends CustomItem{
-	private float currentAmountUse, maxAmountUse;
+	private int currentAmountUse, maxAmountUse;
+	private int food, water;
 	private int useDuration;
-	private EnumAction act;
+	private EnumAction typeAction;
+	private boolean oneOff;
 	
-	public ItemUsable(String unlocalizedName, String name, int stackSize, List description, float weight, float maxAmountUse, int useDuration, EnumAction act) {
+	public ItemUsable(String unlocalizedName, String name, int stackSize, List description, float weight, EnumAction typeAction, int useDuration, int maxAmountUse, int food, int water, boolean oneOff) {
 		super(unlocalizedName, name, stackSize, description, weight);
-		this.maxAmountUse = maxAmountUse;
+		this.typeAction = typeAction;
 		this.useDuration = useDuration;
-		this.act = act;
+		this.maxAmountUse = maxAmountUse;
+		this.food = food;
+		this.water = water;
+		this.oneOff = oneOff;
 	}
 	
 	public void writeTagCompound(ItemStack stack) {
 		stack.stackTagCompound = new NBTTagCompound();
-		stack.getTagCompound().setFloat("currentAmountUse", this.maxAmountUse);
+		stack.getTagCompound().setInteger("currentAmountUse", this.maxAmountUse);
+		stack.getTagCompound().setInteger("maxAmountUse", this.maxAmountUse);
 	}
 	
     @Override
@@ -39,6 +46,20 @@ public class ItemUsable extends CustomItem{
     
     @Override
     public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
+        DayZExtendedPlayer exp = DayZExtendedPlayer.get(player);
+        int amount = stack.getTagCompound().getInteger("currentAmountUse");
+        if(amount > 0) {
+        	if(this.food != 0) {
+        		exp.subtractFood(this.food);       
+        	}
+            if(this.water != 0) {
+        		exp.subtractThirst(this.water);
+        	}
+    		stack.getTagCompound().setInteger("currentAmountUse", amount - 1);
+        	if(this.oneOff && stack.getTagCompound().getInteger("currentAmountUse") == 0) {
+        		--stack.stackSize;
+        	}
+        }
         return stack;
     }
     
@@ -49,12 +70,14 @@ public class ItemUsable extends CustomItem{
     
     @Override
     public EnumAction getItemUseAction(ItemStack p_77661_1_) {
-        return this.act;
+        return this.typeAction;
     }
     
 	@Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-		player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
+		if(stack.getTagCompound().getInteger("currentAmountUse") > 0) {
+			player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
+		}
         return stack;
 	}
 	
@@ -63,7 +86,15 @@ public class ItemUsable extends CustomItem{
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
     	super.addInformation(stack, player, list, bool);
     	if(!(stack.stackTagCompound == null))
-    	list.add("" + stack.getTagCompound().getFloat("currentAmountUse"));
+    	list.add("Type Action: " + this.typeAction);
+    	list.add("Use Duration: " + this.useDuration);
+		if(stack.stackTagCompound != null) {
+			list.add("Max Amount Use: " + stack.getTagCompound().getInteger("maxAmountUse"));
+			list.add("Current Amount Use: " + stack.getTagCompound().getInteger("currentAmountUse"));
+		}
+    	list.add("Food: " + this.food);
+    	list.add("Water: " + this.water);
+    	list.add("One Off: " + this.oneOff);
     }
 	
 }
