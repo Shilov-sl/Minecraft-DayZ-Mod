@@ -38,6 +38,7 @@ public class EventPlayerHandler {
             exp.resetBlood(exp.MAX_BLOOD);
             exp.resetFood(0);
             exp.resetThirst(0);
+            exp.resetEnergy(exp.MAX_ENERGY);
 		}
 	}
 	

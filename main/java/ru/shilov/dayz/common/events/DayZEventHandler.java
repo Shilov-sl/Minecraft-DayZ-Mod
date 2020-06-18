@@ -4,6 +4,7 @@ import java.util.Random;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -28,7 +29,32 @@ public class DayZEventHandler {
 	
 	@SubscribeEvent
 	public void onLivingUpdateEvent(LivingUpdateEvent event) {
-		
+		if (event.entityLiving instanceof EntityPlayer) {
+			event.entityLiving.getDataWatcher().updateObject(8,
+					Byte.valueOf(((byte) 1)));
+
+			if (event.entityLiving.isPotionActive(DayZPotion.bleeding.id)) {
+				event.entityLiving.worldObj.spawnParticle("reddust",
+						event.entityLiving.posX + 0.075F,
+						event.entityLiving.posY - 0.3F,
+						event.entityLiving.posZ, 0.0D, 0.0D, 0.0D);
+				event.entityLiving.worldObj.spawnParticle("reddust",
+						event.entityLiving.posX,
+						event.entityLiving.posY - 0.35F,
+						event.entityLiving.posZ + 0.075F, 0.0D, 0.0D, 0.0D);
+				event.entityLiving.worldObj.spawnParticle("reddust",
+						event.entityLiving.posX - 0.075F,
+						event.entityLiving.posY - 0.4F,
+						event.entityLiving.posZ, 0.0D, 0.0D, 0.0D);
+				event.entityLiving.worldObj.spawnParticle("reddust",
+						event.entityLiving.posX,
+						event.entityLiving.posY - 0.45,
+						event.entityLiving.posZ + 0.075F, 0.0D, 0.0D, 0.0D);
+				event.entityLiving.worldObj.spawnParticle("reddust",
+						event.entityLiving.posX, event.entityLiving.posY - 0.5,
+						event.entityLiving.posZ, 0.0D, 0.0D, 0.0D);
+			}
+		}
 	}
 	
 	@SubscribeEvent
@@ -92,7 +118,21 @@ public class DayZEventHandler {
 	
 	@SubscribeEvent
 	public void livingAttackEvent(LivingAttackEvent event) {
-		
+		if (event.entityLiving instanceof EntityLiving) {
+			EntityLiving living = (EntityLiving) event.entityLiving;
+			living.worldObj.spawnParticle("reddust", living.posX, living.posY
+					+ 0.15 + rand.nextDouble(), living.posZ, 0.0D, 0.0D, 0.0D);
+			living.worldObj.spawnParticle("reddust",
+					living.posX + rand.nextDouble(), living.posY, living.posZ,
+					0.0D, 0.0D, 0.0D);
+			living.worldObj.spawnParticle("reddust", living.posX, living.posY,
+					living.posZ + rand.nextDouble(), 0.0D, 0.0D, 0.0D);
+			living.worldObj.spawnParticle("reddust",
+					living.posX - rand.nextDouble(), living.posY, living.posZ,
+					0.0D, 0.0D, 0.0D);
+			living.worldObj.spawnParticle("reddust", living.posX, living.posY,
+					living.posZ - rand.nextDouble(), 0.0D, 0.0D, 0.0D);
+		}
 	}
 	
 	@SubscribeEvent
